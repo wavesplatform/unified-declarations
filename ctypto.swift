@@ -6,7 +6,7 @@ typealias Address = String
 
 protocol KeyPair {
   var publicKey: PublicKey { get }
-  var privateKey: PublicKey { get }
+  var privateKey: PrivateKey { get }
 }
 
 struct Constants {
