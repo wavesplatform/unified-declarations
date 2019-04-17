@@ -14,7 +14,6 @@ interface KeyPair {
 }
 
 interface WavesCrypto {
-
     fun blake2b(input: Bytes): Bytes
     fun keccak(input: Bytes): Bytes
     fun sha256(input: Bytes): Bytes
@@ -27,8 +26,10 @@ interface WavesCrypto {
     fun keyPair(seed: Seed): KeyPair
     fun publicKey(seed: Seed): PublicKey
     fun privateKey(seed: Seed): PrivateKey
+    
     fun address(publicKey: PublicKey, chainId: String? = null): Address
     fun address(seed: Seed, chainId: String? = null): Address
+
     fun randomSeed(): Seed
 
     fun signBytes(bytes: Bytes, privateKey: PrivateKey): Bytes

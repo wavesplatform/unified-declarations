@@ -1,21 +1,21 @@
-typealias Bytes = UInt8
-typealias PublicKey = Bytes
-typealias PrivateKey = Bytes
-typealias Seed = String
-typealias Address = String
+public typealias Bytes = [UInt8]
+public typealias PublicKey = Bytes
+public typealias PrivateKey = Bytes
+public typealias Seed = String
+public typealias Address = String
 
-protocol KeyPair {
+public protocol KeyPair {
   var publicKey: PublicKey { get }
   var privateKey: PrivateKey { get }
 }
 
-struct Constants {
-  static let PUBLIC_KEY_LENGTH = 32
-  static let PRIVATE_KEY_LENGTH = 32
-  static let SIGNATURE_LENGTH = 64
+public enum WavesCryptoConstants {
+  public static let publicKeyLength: Int = 32
+  public static let privateKeyLength: Int = 32
+  public static let signatureLength: Int = 64
 }
 
-protocol WavesCrypto {
+public protocol WavesCrypto {
   func blake2b(input: Bytes) -> Bytes
   func keccak(input: Bytes) -> Bytes
   func sha256(input: Bytes) -> Bytes
@@ -28,8 +28,10 @@ protocol WavesCrypto {
   func keyPair(seed: Seed) -> KeyPair
   func publicKey(seed: Seed) -> PublicKey
   func privateKey(seed: Seed) -> PrivateKey
+
   func address(publicKey: PublicKey, chainId: String?) -> Address
   func address(seed: Seed, chainId: String?) -> Address
+
   func randomSeed() -> Seed
 
   func signBytes(bytes: Bytes, privateKey: PrivateKey) -> Bytes
