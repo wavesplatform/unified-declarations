@@ -1,6 +1,6 @@
 typealias Bytes = ByteArray
-typealias PublicKey = Bytes
-typealias PrivateKey = Bytes
+typealias PublicKey = String
+typealias PrivateKey = String
 typealias Seed = String
 typealias Address = String
 

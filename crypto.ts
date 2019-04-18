@@ -1,40 +1,40 @@
-export type Bytes = Uint8Array
-export type PublicKey = Bytes
-export type PrivateKey = Bytes
-export type Seed = string
-export type Address = string
-export type KeyPair = { public: PublicKey, private: PrivateKey }
+export type TBytes = Uint8Array
+export type TPublicKey = string
+export type TPrivateKey = string
+export type TSeed = string | TBytes
+export type TAddress = string
+export type TKeyPair = { public: TPublicKey, private: TPrivateKey }
+export type TChainId = string | number
 
 export const PUBLIC_KEY_LENGTH = 32
 export const PRIVATE_KEY_LENGTH = 32
 export const SIGNATURE_LENGTH = 64
 
-export interface WavesCrypto {
+export interface IWavesCrypto {
   //Hashing 
-  blake2b: (input: Bytes) => Bytes
-  keccak: (input: Bytes) => Bytes
-  sha256: (input: Bytes) => Bytes
+  blake2b: (input: TBytes) => TBytes
+  keccak: (input: TBytes) => TBytes
+  sha256: (input: TBytes) => TBytes
 
   //Base encoding\decoding
-  base58encode: (input: Bytes) => string
-  base58decode: (input: string) => Bytes
-  base64encode: (input: Bytes) => string
-  base64decode: (input: string) => Bytes
+  base58encode: (input: TBytes) => string
+  base58decode: (input: string) => TBytes | null
+  base64encode: (input: TBytes) => string
+  base64decode: (input: string) => TBytes | null
 
   //Keys, seeds and addresses
-  keyPair: (seed: Seed) => KeyPair
-  publicKey: (seed: Seed) => PublicKey
-  privateKey: (seed: Seed) => PrivateKey
-  address: (publicKeyOrSeed: PublicKey | Seed, chainId?: string) => Address
-  randomSeed: () => Seed
+  keyPair: (seed: TSeed) => TKeyPair
+  publicKey: (seed: TSeed) => TPublicKey
+  privateKey: (seed: TSeed) => TPrivateKey
+  address: (publicKeyOrSeed: TPublicKey | TSeed, chainId?: TChainId) => TAddress
+  randomSeed: () => TSeed
 
   //Bytes hashing and signing
-  signBytes: (bytes: Bytes, seed: Seed) => Bytes
-  hashBytes: (bytes: Bytes) => Bytes
+  signBytes: (bytes: TBytes, seed: TSeed) => TBytes
 
   //Verification
-  verifySignature: (publicKey: PublicKey, bytes: Bytes, signature: Bytes) => boolean
-  verifyPublicKey: (publicKey: PublicKey) => boolean
-  verifyAddress: (address: Address, chainId?: string, publicKey?: PublicKey) => boolean
+  verifySignature: (publicKey: TPublicKey, bytes: TBytes, signature: TBytes) => boolean
+  verifyPublicKey: (publicKey: TPublicKey) => boolean
+  verifyAddress: (address: TAddress, optional?: { chainId?: TChainId, publicKey?: TPublicKey }) => boolean
 
 }

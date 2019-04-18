@@ -1,6 +1,6 @@
 public typealias Bytes = [UInt8]
-public typealias PublicKey = Bytes
-public typealias PrivateKey = Bytes
+public typealias PublicKey = String
+public typealias PrivateKey = String
 public typealias Seed = String
 public typealias Address = String
 
