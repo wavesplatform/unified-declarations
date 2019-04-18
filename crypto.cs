@@ -11,6 +11,19 @@ public interface IKeyPair
   PrivateKey PrivateKey { get; }
 }
 
+static class WavesCryptoConstants
+{
+  public const int PUBLIC_KEY_LENGTH = 32;
+  public const int PRIVATE_KEY_LENGTH = 32;
+  public const int SIGNATURE_LENGTH = 64;
+}
+
+public enum WavesChainId
+{
+  MAIN_NET_CHAIN_ID = 87,
+  TEST_NET_CHAIN_ID = 84,
+}
+
 public interface IWavesCrypto
 {
   Bytes Blake2b(Bytes input);

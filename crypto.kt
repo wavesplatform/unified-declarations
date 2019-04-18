@@ -11,7 +11,6 @@ const val SIGNATURE_LENGTH = 64
 const val MAIN_NET_CHAIN_ID = 87
 const val TEST_NET_CHAIN_ID = 84
 
-
 interface KeyPair {
     val publicKey: PublicKey
     val privateKey: PrivateKey
