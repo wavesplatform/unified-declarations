@@ -10,6 +10,9 @@ export const PUBLIC_KEY_LENGTH = 32
 export const PRIVATE_KEY_LENGTH = 32
 export const SIGNATURE_LENGTH = 64
 
+export const MAIN_NET_CHAIN_ID = 87
+export const TEST_NET_CHAIN_ID = 84
+
 export interface IWavesCrypto {
   //Hashing 
   blake2b: (input: TBytes) => TBytes
@@ -38,3 +41,6 @@ export interface IWavesCrypto {
   verifyAddress: (address: TAddress, optional?: { chainId?: TChainId, publicKey?: TPublicKey }) => boolean
 
 }
+
+
+console.log('T'.charCodeAt(0))

@@ -15,6 +15,11 @@ public enum WavesCryptoConstants {
   public static let signatureLength: Int = 64
 }
 
+public enum WavesChainId {
+  public static let mainNet: Int = 87
+  public static let testNet: Int = 84
+}
+
 public protocol WavesCrypto {
   func blake2b(input: Bytes) -> Bytes
   func keccak(input: Bytes) -> Bytes
