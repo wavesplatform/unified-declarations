@@ -1,5 +1,4 @@
-﻿using System;
-using Bytes = System.Collections.Generic.IEnumerable<byte>;
+﻿using Bytes = System.Collections.Generic.IEnumerable<byte>;
 using PublicKey = System.String;
 using PrivateKey = System.String;
 using Seed = System.String;
