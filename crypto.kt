@@ -34,7 +34,6 @@ interface WavesCrypto {
 
     fun signBytes(bytes: Bytes, privateKey: PrivateKey): Bytes
     fun signBytes(bytes: Bytes, seed: Seed): Bytes
-    fun hashBytes(bytes: Bytes): Bytes
 
     fun verifySignature(publicKey: PublicKey, bytes: Bytes, signature: Bytes): Boolean
     fun verifyPublicKey(publicKey: PublicKey): Boolean

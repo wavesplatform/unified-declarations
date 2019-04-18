@@ -36,7 +36,6 @@ public protocol WavesCrypto {
 
   func signBytes(bytes: Bytes, privateKey: PrivateKey) -> Bytes
   func signBytes(bytes: Bytes, seed: Seed) -> Bytes
-  func hashBytes(bytes: Bytes) -> Bytes
 
   func verifySignature(publicKey: PublicKey, bytes: Bytes, signature: Bytes) -> Bool
   func verifyPublicKey(publicKey: PublicKey) -> Bool
