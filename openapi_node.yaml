@@ -1,0 +1,139 @@
+openapi: "3.0.0"
+info:
+  description: "Waves Node"
+  version: "0.1.0"
+  title: "Swagger Node"
+  termsOfService: "http://swagger.io/terms/"
+  contact:
+    email: "mefilt@gmail.com"
+  license:
+    name: "Apache 2.0"
+    url: "http://www.apache.org/licenses/LICENSE-2.0.html"
+servers:
+  - url: "https://nodes.wavesnodes.com"
+tags:
+  - name: Assets
+components:
+  schemas:
+    AssetBalance:
+      type: object
+      properties:
+        assetId:
+          type: string
+        balance: 
+          type: integer
+          format: int64
+        reissuable:
+          type: boolean
+        minSponsoredAssetFee: 
+          type: integer
+          format: int64
+        sponsorBalance:
+          type: integer
+          format: int64
+        quantity: 
+          type: integer
+          format: int32
+        issueTransaction:
+          $ref: '#/components/schemas/IssueTransaction'
+      required:
+        - assetId
+        - balance
+        - reissuable
+        - minSponsoredAssetFee
+        - sponsorBalance
+        - quantity
+        - issueTransaction
+          
+    IssueTransaction:
+      type: object
+      properties:
+        type:
+          type: integer
+          format: int64
+        id:
+          type: string
+        sender: 
+          type: string
+        senderPublicKey:
+          type: string
+        fee: 
+          type: integer
+          format: int64
+        timestamp:
+          type: integer
+          format: int64
+        proofs:
+          type: array
+          items: 
+            type: string
+        version:
+          type: integer
+        assetId:
+          type: string
+        name:
+          type: string
+        quantity:
+          type: integer
+          format: int32
+        reissuable:
+          type: boolean
+        decimals:
+          type: integer
+          format: int64
+        description:
+          type: string
+        chainId:
+          type: integer
+          format: int64
+        script:
+          type: string
+      required:
+        - type
+        - id
+        - sender
+        - senderPublicKey
+        - fee
+        - timestamp
+        - proofs
+        - version
+        - assetId
+        - name
+        - quantity
+        - reissuable
+        - decimals
+        - description
+        - chainId
+
+paths:
+  /assets/balance/{address}:
+    summary: Provides detailed information about given asset
+    description: Provides detailed information about given asset
+    get:
+      tags: 
+        - Assets
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                  type: object
+                  title: AssetsBalanceByAddressDTO
+                  properties: 
+                    address:
+                      type: string
+                    balances:
+                      type: array
+                      items:
+                        $ref: '#/components/schemas/AssetBalance'
+                  required:
+                    - address
+                    - balances
+      parameters: 
+        - in: path
+          name: address
+          schema:
+            type: string
+          required: true
+          
