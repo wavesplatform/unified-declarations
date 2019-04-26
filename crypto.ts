@@ -40,6 +40,10 @@ export interface IWavesCrypto {
   verifyPublicKey: (publicKey: TPublicKey) => boolean
   verifyAddress: (address: TAddress, optional?: { chainId?: TChainId, publicKey?: TPublicKey }) => boolean
 
+  //Messaging
+  encrypt: (privateKey: TPrivateKey, publicKey: TPublicKey, message: string) => string
+  decrypt: (privateKey: TPrivateKey, publicKey: TPublicKey, encryptedMessage: string) => string
+
 }
 
 
