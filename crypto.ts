@@ -1,8 +1,10 @@
 export type TBytes = Uint8Array
-export type TPublicKey = string
-export type TPrivateKey = string
+export type TBase58 = string
+export type TPublicKey = TBase58
+export type TPrivateKey = TBase58
+export type TKey = TBase58
+export type TAddress = TBase58
 export type TSeed = string | TBytes
-export type TAddress = string
 export type TKeyPair = { public: TPublicKey, private: TPrivateKey }
 export type TChainId = string | number
 
@@ -41,8 +43,8 @@ export interface IWavesCrypto {
   verifyAddress: (address: TAddress, optional?: { chainId?: TChainId, publicKey?: TPublicKey }) => boolean
 
   //Messaging
-  encrypt: (privateKey: TPrivateKey, publicKey: TPublicKey, message: string) => string
-  decrypt: (privateKey: TPrivateKey, publicKey: TPublicKey, encryptedMessage: string) => string
+  encrypt: (sharedKey: TKey, message: string) => TBase58
+  decrypt: (sharedKey: TKey, encryptedMessage: TBase58) => string
 
 }
 
