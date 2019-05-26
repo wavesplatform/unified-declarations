@@ -17,8 +17,8 @@ type Address string
 
 // KeyPair is an interface to a structure that holds corresponding private and public keys.
 type KeyPair interface {
-	PublicKey() string
-	PrivateKey() string
+	PublicKey() PublicKey
+	PrivateKey() PrivateKey
 }
 
 // WavesChainID is a byte to represent blockchain identification.
