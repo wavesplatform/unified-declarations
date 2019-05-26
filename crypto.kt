@@ -16,24 +16,44 @@ interface KeyPair {
     val privateKey: PrivateKey
 }
 
+interface SeedWithNonce {
+  val seed: Seed
+  val nonce: Int
+}
+
 interface WavesCrypto {
+
+    fun seedWithNonce(seed: Seed, nonce: Int): SeedWithNonce
+
     fun blake2b(input: Bytes): Bytes
     fun keccak(input: Bytes): Bytes
     fun sha256(input: Bytes): Bytes
 
-    fun base58encode(input: Bytes): String
-    fun base58decode(input: String): Bytes
-    fun base64encode(input: Bytes): String
-    fun base64decode(input: String): Bytes
+    @Throws(ParseException::class)
+    fun base58Decode(input: String): Bytes
+    fun base58Encode(input: Bytes): String
+
+    @Throws(ParseException::class)
+    fun base64Decode(input: String): Bytes
+    fun base64Encode(input: Bytes): String
+
+    @Throws(ParseException::class)
+    fun base16Decode(input: String): Bytes
+    fun base16Encode(input: Bytes): String
 
     fun keyPair(seed: Seed): KeyPair
+    fun keyPair(seed: SeedWithNonce): KeyPair
     fun publicKey(seed: Seed): PublicKey
+    fun publicKey(seed: SeedWithNonce): PublicKey
     fun privateKey(seed: Seed): PrivateKey
+    fun privateKey(seed: SeedWithNonce): PrivateKey
     
     fun address(publicKey: PublicKey, chainId: String? = null): Address
+    fun address(seed: SeedWithNonce, chainId: String? = null): Address
     fun address(seed: Seed, chainId: String? = null): Address
 
     fun randomSeed(): Seed
+    fun randomBytes(size: Int): Bytes
 
     fun signBytes(bytes: Bytes, privateKey: PrivateKey): Bytes
     fun signBytes(bytes: Bytes, seed: Seed): Bytes
@@ -43,5 +63,3 @@ interface WavesCrypto {
     fun verifyAddress(address: Address, chainId: String? = null, publicKey: PublicKey? = null): Boolean
 
 }
-
-
