@@ -6,11 +6,6 @@ export const SIGNATURE_LENGTH = 64
 export const MAIN_NET_CHAIN_ID = 87 //W
 export const TEST_NET_CHAIN_ID = 84 //T
 
-export interface ISeedWithNonce {
-  seed: TSeed
-  nonce: number
-}
-
 /* Type aliases used to increase flexibility and be able
    to extend these types later on. Also type aliases allows
    names to be more self explanatory like in BASE58 case. */
@@ -23,35 +18,32 @@ export type TBase16 = string //Same as HEX
 
 export type TChainId = string | number
 
-//TAddress is a BASE58 string representation of Waves address.
-export type TAddress = TBase58
-
-//TKey is a BASE58 string representation of a key in general.
-export type TKey = TBase58
-
-//TPublicKey is a BASE58 string representation of a public key.
-export type TPublicKey = { publicKey: TKey }
-
-//TPrivateKey is a BASE58 string representation of a private key.
-export type TPrivateKey = { privateKey: TKey }
-
-export type TKeyPair = TPublicKey & TPrivateKey
-
-//TSeed is a union of types that could represent a Waves seed.
-export type TSeed = string | TBytes | ISeedWithNonce
-
-/* Consider that every method should handle TSeed
-   seamlessly so in case of absence of type union operator
-   overloads should be implemented for each possible TSeed type */
-
-
+export interface IAddress {
+  string: TBase58
+  fromPublicKey: (chainId: TChainId, publicKey: IPublicKey) => IKeyPair
+  isValid: () => boolean
+}
+export interface IPublicKey {
+  publicKey: TBytes
+  address: IAddress
+  isValid: () => boolean
+  verify: (bytes: TBytes | TBase58, signature: TBytes | TBase58) => boolean
+}
+export interface IPrivateKey {
+  privateKey: TBytes
+  publicKey(): () => IPublicKey
+  isValid: () => boolean
+  signBytes<T extends TBytes | TBase58>: (bytes: T) => T
+}
+export interface IKeyPair {
+  fromSeed: (seed: string, nonce: number) => IKeyPair
+  randomSeedPhrase: () => string
+}
 
 /* Waves Crypto is a collection of essential cryptography and hashing
    algorithms used by Waves, protocol entities and binary structures. */
 
 export interface IWavesCrypto {
-  seedWithNonce: (seed: TSeed, nonce: number) => ISeedWithNonce
-
   //Hashing 
   blake2b: (input: TBytes) => TBytes
   keccak: (input: TBytes) => TBytes
@@ -65,27 +57,21 @@ export interface IWavesCrypto {
   base16Encode: (input: TBytes) => TBase16
   base16Decode: (input: TBase16) => TBytes //throws (invalid input)
 
-  //Keys, seeds and addresses
-  keyPair: (seed: TSeed) => TKeyPair
-  publicKey: (seed: TSeed | TPrivateKey) => TPublicKey
-  privateKey: (seed: TSeed) => TPrivateKey
-  address: (seedOrKeys: TSeed | TPrivateKey | TPublicKey, chainId?: TChainId) => TAddress
-
   //Random
   randomBytes: (size: number) => TBytes
-  randomSeed: () => TSeed
+  randomSeedPhrase: () => string
 
   //Bytes hashing and signing
-  signBytes: (bytes: TBytes, seedOrPrivateKey: TSeed | TPrivateKey) => TBytes
+  signBytes<T extends TBytes | TBase58>: (bytes: T, privateKey: T) => T
 
   //Verification
-  verifySignature: (bytes: TBytes, signature: TBytes, publicKey: TPublicKey) => boolean
-  verifyPublicKey: (publicKey: TPublicKey) => boolean
-  verifyAddress: (address: TAddress, optional?: { chainId?: TChainId, publicKey?: TPublicKey }) => boolean
+  verifySignature: (bytes: TBytes | TBase58, signature: TBytes | TBase58, publicKey: TBytes | TBase58) => boolean
+  verifyPublicKey: (publicKey: TBytes | TBase58) => boolean
+  verifyAddress: (address: TBytes | TBase58, chainId: TChainId, publicKey: TBytes | TBase58) => boolean
 
   //TODO Messaging
-  //sharedKey: (privateKeyFrom: TKey, publicKeyTo: TKey) => TKey
-  //messageDecrypt: (sharedKey: TKey, encryptedMessage: TBase58) => string
-  //messageEncrypt: (sharedKey: TKey, message: string) => TBase58
+  //sharedKey<T extends TBytes | TBase58>: (privateKeyFrom: T, publicKeyTo: T) => T
+  //messageDecrypt<T extends TBytes | TBase58>: (sharedKey: T, encryptedMessage: T) => T
+  //messageEncrypt<T extends TBytes | TBase58>: (sharedKey: T, message: T) => T
 
 }
