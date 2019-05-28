@@ -25,12 +25,14 @@ export interface IAddress {
 }
 export interface IPublicKey {
   publicKey: TBytes
+  string: TBase58
   address: IAddress
   isValid: () => boolean
   verify: (bytes: TBytes | TBase58, signature: TBytes | TBase58) => boolean
 }
 export interface IPrivateKey {
   privateKey: TBytes
+  string: TBase58
   publicKey(): () => IPublicKey
   isValid: () => boolean
   signBytes<T extends TBytes | TBase58>: (bytes: T) => T
