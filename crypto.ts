@@ -19,25 +19,28 @@ export type TBase16 = string //Same as HEX
 export type TChainId = string | number
 
 export interface IAddress {
-  string: TBase58
+  address: TBytes
+  toString(): TBase58
   fromPublicKey: (chainId: TChainId, publicKey: IPublicKey) => IKeyPair
   isValid: () => boolean
 }
 export interface IPublicKey {
   publicKey: TBytes
-  string: TBase58
+  toString(): TBase58
   address: IAddress
   isValid: () => boolean
   verify: (bytes: TBytes | TBase58, signature: TBytes | TBase58) => boolean
 }
 export interface IPrivateKey {
   privateKey: TBytes
-  string: TBase58
+  toString(): TBase58
   publicKey(): () => IPublicKey
   isValid: () => boolean
   signBytes<T extends TBytes | TBase58>: (bytes: T) => T
 }
 export interface IKeyPair {
+  privateKey: IPrivateKey
+  publicKey: IPublicKey
   fromSeed: (seed: string, nonce: number) => IKeyPair
   randomSeedPhrase: () => string
 }
