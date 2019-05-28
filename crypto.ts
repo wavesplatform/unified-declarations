@@ -70,9 +70,9 @@ export interface IWavesCrypto {
   signBytes<T extends TBytes | TBase58>: (bytes: T, privateKey: T) => T
 
   //Verification
-  verifySignature: (bytes: TBytes | TBase58, signature: TBytes | TBase58, publicKey: TBytes | TBase58) => boolean
-  verifyPublicKey: (publicKey: TBytes | TBase58) => boolean
-  verifyAddress: (address: TBytes | TBase58, chainId: TChainId, publicKey: TBytes | TBase58) => boolean
+  verifySignature<T extends TBytes | TBase58>: (bytes: T, signature: T, publicKey: T) => boolean
+  verifyPublicKey<T extends TBytes | TBase58>: (publicKey: T) => boolean
+  verifyAddress<T extends TBytes | TBase58>: (address: T, chainId: TChainId, publicKey: T) => boolean
 
   //TODO Messaging
   //sharedKey<T extends TBytes | TBase58>: (privateKeyFrom: T, publicKeyTo: T) => T
