@@ -89,7 +89,7 @@ export interface IWavesCrypto<TDesiredOut extends TBinaryOut> {
   verifyPublicKey: (publicKey: TBinaryIn) => boolean
   verifyAddress: (address: TBinaryIn, optional?: { chainId?: TChainId, publicKey?: TBinaryIn }) => boolean
 
-  //TODO Messaging
+  //Messaging
   sharedKey: (privateKeyFrom: TBinaryIn, publicKeyTo: TBinaryIn, prefix: TRawStringIn) => TDesiredOut
   messageDecrypt: (sharedKey: TBinaryIn, encryptedMessage: TBinaryIn, prefix: TRawStringIn) => string
   messageEncrypt: (sharedKey: TBinaryIn, message: TRawStringIn, prefix: TRawStringIn) => TDesiredOut
