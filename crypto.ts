@@ -7,7 +7,7 @@ export const MAIN_NET_CHAIN_ID = 87 //W
 export const TEST_NET_CHAIN_ID = 84 //T
 
 export interface ISeedWithNonce {
-  seed: TSeed
+  seed: TBytes
   nonce: number
 }
 
@@ -23,69 +23,76 @@ export type TBase16 = string //Same as HEX
 
 export type TChainId = string | number
 
-//TAddress is a BASE58 string representation of Waves address.
-export type TAddress = TBase58
+//Every binary parameter could be represented as Uint8Array or number[] or base58 string
+export type TBinaryIn = TBytes | TBase58 | number[]
 
-//TKey is a BASE58 string representation of a key in general.
-export type TKey = TBase58
+//Every input stinrg could be represented as Uint8Array or number[] or a string itself
+export type TRawStringIn = TBytes | string | number[]
+
+export type TBinaryOut = TBytes | TBase58
 
 //TPublicKey is a BASE58 string representation of a public key.
-export type TPublicKey = { publicKey: TKey }
+export type TPublicKey<T extends TBinaryIn = TBytes> = { publicKey: T }
 
 //TPrivateKey is a BASE58 string representation of a private key.
-export type TPrivateKey = { privateKey: TKey }
+export type TPrivateKey<T extends TBinaryIn = TBytes> = { privateKey: T }
 
-export type TKeyPair = TPublicKey & TPrivateKey
+export type TKeyPair<T extends TBinaryIn = TBytes> = TPublicKey<T> & TPrivateKey<T>
 
 //TSeed is a union of types that could represent a Waves seed.
-export type TSeed = string | TBytes | ISeedWithNonce
+export type TSeed = TRawStringIn | ISeedWithNonce
 
 /* Consider that every method should handle TSeed
    seamlessly so in case of absence of type union operator
    overloads should be implemented for each possible TSeed type */
 
 
-
 /* Waves Crypto is a collection of essential cryptography and hashing
    algorithms used by Waves, protocol entities and binary structures. */
 
-export interface IWavesCrypto {
-  seedWithNonce: (seed: TSeed, nonce: number) => ISeedWithNonce
+export interface IWavesCrypto<TDesiredOut extends TBinaryOut> {
+  seed: (seed: TSeed, nonce: number) => ISeedWithNonce
 
   //Hashing 
-  blake2b: (input: TBytes) => TBytes
-  keccak: (input: TBytes) => TBytes
-  sha256: (input: TBytes) => TBytes
+  blake2b: (input: TBinaryIn) => TDesiredOut
+  keccak: (input: TBinaryIn) => TDesiredOut
+  sha256: (input: TBinaryIn) => TDesiredOut
 
   //Base encoding\decoding
-  base64Encode: (input: TBytes) => TBase64
+  base64Encode: (input: TBinaryIn) => TBase64
   base64Decode: (input: TBase64) => TBytes //throws (invalid input)
-  base58Encode: (input: TBytes) => TBase58
+  base58Encode: (input: TBinaryIn) => TBase58
   base58Decode: (input: TBase58) => TBytes //throws (invalid input)
-  base16Encode: (input: TBytes) => TBase16
+  base16Encode: (input: TBinaryIn) => TBase16
   base16Decode: (input: TBase16) => TBytes //throws (invalid input)
 
+  //Utils
+  stringToBytes: (input: string) => TBytes
+  bytesToString: (input: TBinaryIn) => string
+  split: (binary: TBinaryIn, ...sizes: number[]) => TBytes[]
+
   //Keys, seeds and addresses
-  keyPair: (seed: TSeed) => TKeyPair
-  publicKey: (seed: TSeed | TPrivateKey) => TPublicKey
-  privateKey: (seed: TSeed) => TPrivateKey
-  address: (seedOrKeys: TSeed | TPrivateKey | TPublicKey, chainId?: TChainId) => TAddress
+  keyPair: (seed: TSeed) => TKeyPair<TDesiredOut>
+  publicKey: (seed: TSeed) => TDesiredOut
+  privateKey: (seed: TSeed) => TDesiredOut
+  address: (seedOrKeys: TSeed | TPublicKey<TBinaryIn>, chainId?: TChainId) => TDesiredOut
 
   //Random
   randomBytes: (size: number) => TBytes
-  randomSeed: () => TSeed
+  randomSeed: () => TDesiredOut
 
   //Bytes hashing and signing
-  signBytes: (bytes: TBytes, seedOrPrivateKey: TSeed | TPrivateKey) => TBytes
+  signBytes: (bytes: TBinaryIn, seedOrPrivateKey: TSeed | TPrivateKey<TBinaryIn>, random?: TBinaryIn) => TDesiredOut
 
   //Verification
-  verifySignature: (bytes: TBytes, signature: TBytes, publicKey: TPublicKey) => boolean
-  verifyPublicKey: (publicKey: TPublicKey) => boolean
-  verifyAddress: (address: TAddress, optional?: { chainId?: TChainId, publicKey?: TPublicKey }) => boolean
+  verifySignature: (publicKey: TBinaryIn, bytes: TBinaryIn, signature: TBinaryIn) => boolean
+  verifyPublicKey: (publicKey: TBinaryIn) => boolean
+  verifyAddress: (address: TBinaryIn, optional?: { chainId?: TChainId, publicKey?: TBinaryIn }) => boolean
 
   //TODO Messaging
-  //sharedKey: (privateKeyFrom: TKey, publicKeyTo: TKey) => TKey
-  //messageDecrypt: (sharedKey: TKey, encryptedMessage: TBase58) => string
-  //messageEncrypt: (sharedKey: TKey, message: string) => TBase58
-
+  sharedKey: (privateKeyFrom: TBinaryIn, publicKeyTo: TBinaryIn, prefix: TRawStringIn) => TDesiredOut
+  messageDecrypt: (sharedKey: TBinaryIn, encryptedMessage: TBinaryIn, prefix: TRawStringIn) => string
+  messageEncrypt: (sharedKey: TBinaryIn, message: TRawStringIn, prefix: TRawStringIn) => TDesiredOut
 }
+
+
