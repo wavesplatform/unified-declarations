@@ -51,7 +51,15 @@ export type TSeed = TRawStringIn | ISeedWithNonce
    algorithms used by Waves, protocol entities and binary structures. */
 
 export interface IWavesCrypto<TDesiredOut extends TBinaryOut> {
+  //Seeds, keys and addresses
   seed: (seed: TSeed, nonce: number) => ISeedWithNonce
+  keyPair: (seed: TSeed) => TKeyPair<TDesiredOut>
+  publicKey: (seed: TSeed) => TDesiredOut
+  privateKey: (seed: TSeed) => TDesiredOut
+  address: (seedOrPublicKey: TSeed | TPublicKey<TBinaryIn>, chainId?: TChainId) => TDesiredOut
+
+  //Bytes hashing and signing
+  signBytes: (seedOrPrivateKey: TSeed | TPrivateKey<TBinaryIn>, bytes: TBinaryIn, random?: TBinaryIn) => TDesiredOut
 
   //Hashing 
   blake2b: (input: TBinaryIn) => TDesiredOut
@@ -70,19 +78,12 @@ export interface IWavesCrypto<TDesiredOut extends TBinaryOut> {
   stringToBytes: (input: string) => TBytes
   bytesToString: (input: TBinaryIn) => string
   split: (binary: TBinaryIn, ...sizes: number[]) => TBytes[]
+  concat: (...binaries: TBinaryIn[]) => TDesiredOut
 
-  //Keys, seeds and addresses
-  keyPair: (seed: TSeed) => TKeyPair<TDesiredOut>
-  publicKey: (seed: TSeed) => TDesiredOut
-  privateKey: (seed: TSeed) => TDesiredOut
-  address: (seedOrKeys: TSeed | TPublicKey<TBinaryIn>, chainId?: TChainId) => TDesiredOut
 
   //Random
   randomBytes: (size: number) => TBytes
-  randomSeed: () => TDesiredOut
-
-  //Bytes hashing and signing
-  signBytes: (bytes: TBinaryIn, seedOrPrivateKey: TSeed | TPrivateKey<TBinaryIn>, random?: TBinaryIn) => TDesiredOut
+  randomSeed: (wordsCount?: number) => string
 
   //Verification
   verifySignature: (publicKey: TBinaryIn, bytes: TBinaryIn, signature: TBinaryIn) => boolean
