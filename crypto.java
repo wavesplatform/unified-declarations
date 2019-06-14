@@ -1,78 +1,89 @@
-enum WavesCryptoConstants {
+class Constants {
+    static final int PUBLIC_KEY_LENGTH = 32;
+    static final int PRIVATE_KEY_LENGTH = 32;
+    static final int SIGNATURE_LENGTH = 64;
 
-    PUBLIC_KEY_LENGTH((byte) 32),
-    PRIVATE_KEY_LENGTH((byte) 32),
-    SIGNATURE_LENGTH((byte) 64);
-
-    WavesCryptoConstants(byte size) {
-    }
+    static final byte MAIN_NET_CHAIN_ID = (byte) 87;
+    static final byte TEST_NET_CHAIN_ID = (byte) 84;
 }
 
-enum WavesChainId {
+enum ChainId {
     MAINNET((byte) 87),
     TESTNET((byte) 84);
 
-    WavesChainId(byte chainId) {
+    ChainId(byte chainId) {
     }
-
-
 }
 
-interface Address {
+//TODO INTERFACES -> CLASSES (but compare with another langs implementations)
+//TODO Rename ...Or... args
+
+interface ISeedWithNonce {
+    Bytes seed();
+    int nonce();
 }
 
-interface PublicKey {
+/* Type aliases used to increase flexibility and be able
+   to extend these types later on. Also type aliases allows
+   names to be more self explanatory like in BASE58 case. */
+
+//TODO Bytes Uint8Array
+
+//TODO Base64 = string
+//TODO Base58 = string
+//TODO Base16 = string
+
+//TODO ChainId = string | number
+
+//TODO Address = Base58
+interface IAddress {
 }
 
-interface PrivateKey {
+//TODO Key = Base58 ???
+
+//TODO PublicKey = Key
+interface IPublicKey {
 }
 
-
-interface KeyPair {
-    PublicKey publicKey();
-
-    PrivateKey privateKey();
+//TODO PrivateKey = Key
+interface IPrivateKey {
 }
 
-interface ByteString {
+interface IKeyPair {
+    IPublicKey publicKey();
+    IPrivateKey privateKey();
 }
 
-interface WavesCrypto {
-    ByteString blake2b(ByteString input);
+//TODO Seed = string | Bytes | SeedWithNonce
 
-    ByteString keccak(ByteString input);
+interface IWavesCrypto {
+    ISeedWithNonce seedWithNonce(IBytes seed, int nonce);
 
-    ByteString sha256(ByteString input);
+    IBytes blake2b(IBytes input);
+    IBytes keccak(IBytes input);
+    IBytes sha256(IBytes input);
 
-    String base58encode(ByteString input);
+    IBase64 base64encode(IBytes input);
+    IBytes base64decode(IBase64 input); //TODO throws (invalid input)
+    IBase58 base58encode(IBytes input);
+    IBytes base58decode(IBase58 input); //TODO throws (invalid input)
+    IBase16 base16encode(IBytes input);
+    IBytes base16decode(IBase16 input); //TODO throws (invalid input)
 
-    ByteString base58decode(String input);
+    IKeyPair keyPair(IBytes seed);
+    IPublicKey publicKey(IBytes seed);
+    IPublicKey publicKey(IPrivateKey privateKey);
+    IPrivateKey privateKey(String seed);
+    Address address(IPublicKey publicKey, ChainId chainId); //TODO Seed | PrivateKey | PublicKey seedOrKeys, ChainId chainId
 
-    String base64encode(ByteString input);
+    Bytes randomBytes(int size);
+    Seed randomSeed();
 
-    ByteString base64decode(String input);
+    Bytes signBytes(Bytes bytes, Seed seed);
+    Bytes signBytes(Bytes bytes, PrivateKey privateKey);
 
-    KeyPair keyPair(String seed);
-
-    PublicKey publicKey(String seed);
-
-    PrivateKey privateKey(String seed);
-
-    Address address(PublicKey publicKey, WavesChainId chainId);
-
-    Address address(String seed, WavesChainId chainId);
-
-    String randomSeed();
-
-    ByteString signBytes(ByteString bytes, PrivateKey privateKey);
-
-    ByteString signBytes(ByteString bytes, String seed);
-
-    Boolean verifySignature(PublicKey publicKey, ByteString byteString, ByteString signature);
-
-    Boolean verifyPublicKey(PublicKey publicKey);
-
-    Boolean verifyAddress(Address address, WavesChainId chainId, PublicKey publicKey);
-
+    boolean verifySignature(Bytes Bytes, Bytes signature, PublicKey publicKey);
+    boolean verifyPublicKey(PublicKey publicKey);
+    boolean verifyAddress(Address address, ChainId chainId, PublicKey publicKey); //TODO optional?: { chainId?: TChainId, publicKey?: TPublicKey }
 }
 
