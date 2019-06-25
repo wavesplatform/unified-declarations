@@ -26,14 +26,17 @@ public enum WavesChainId
 
 public interface IWavesCrypto
 {
+
   Bytes Blake2b(Bytes input);
   Bytes Keccak(Bytes input);
   Bytes Sha256(Bytes input);
 
-  string Base58encode(Bytes input);
-  Bytes Base58decode(string input);
-  string Base64encode(Bytes input);
-  Bytes Base64decode(string input);
+  string Base58Encode(Bytes input);
+  Bytes Base58Decode(string input);
+  string Base64Encode(Bytes input);
+  Bytes Base64Decode(string input);
+  string Base16Encode(Bytes input);
+  Bytes Base16Decode(string input);
 
   IKeyPair KeyPair(Seed seed);
   PublicKey PublicKey(Seed seed);
@@ -43,6 +46,12 @@ public interface IWavesCrypto
   Address Address(Seed seed, ChainId? chainId = null);
 
   Seed RandomSeed();
+  Bytes RandomBytes(int size);
+
+  Bytes StringToBytes(string input);
+  string BytesToString(Bytes input);
+  Bytes Split(Bytes binaryInput, int[] sizes);
+  string Concat(Bytes[] binaryInput);
 
   Bytes SignBytesWithPrivateKey(Bytes bytes, PrivateKey privateKey);
   Bytes SignBytes(Bytes bytes, Seed seed);
@@ -50,4 +59,8 @@ public interface IWavesCrypto
   bool VerifySignature(PublicKey publicKey, Bytes bytes, Bytes signature);
   bool VerifyPublicKey(PublicKey publicKey);
   bool VerifyAddress(Address address, ChainId? chainId, PublicKey publicKey);
+
+  Bytes SharedKey(Bytes privateKeyFrom, Bytes publicKeyTo, string prefix);
+  string MessageDecrypt(Bytes sharedKey, Bytes encryptedMessage, string prefix);
+  Bytes MessageEncrypt(Bytes sharedKey, string message, string prefix);
 }
