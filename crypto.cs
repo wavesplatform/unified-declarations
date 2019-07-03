@@ -3,7 +3,6 @@ using System.Collections.Generic;
 
 namespace csharp_lib_crypto
 {
-    using Bytes = IEnumerable<byte>;
     using PublicKey = System.String;
     using PrivateKey = System.String;
     using Seed = System.String;
@@ -32,16 +31,16 @@ namespace csharp_lib_crypto
     public interface IWavesCrypto
     {
 
-        Bytes Blake2b(Bytes input);
-        Bytes Keccak(Bytes input);
-        Bytes Sha256(Bytes input);
+        byte[] Blake2b(byte[] input);
+        byte[] Keccak(byte[] input);
+        byte[] Sha256(byte[] input);
 
-        string Base58Encode(Bytes input);
-        Bytes Base58Decode(string input);
-        string Base64Encode(Bytes input);
-        Bytes Base64Decode(string input);
-        string Base16Encode(Bytes input);
-        Bytes Base16Decode(string input);
+        string Base58Encode(byte[] input);
+        byte[] Base58Decode(string input);
+        string Base64Encode(byte[] input);
+        byte[] Base64Decode(string input);
+        string Base16Encode(byte[] input);
+        byte[] Base16Decode(string input);
 
         IKeyPair KeyPair(Seed seed);
         PublicKey PublicKey(Seed seed);
@@ -51,21 +50,19 @@ namespace csharp_lib_crypto
         Address Address(Seed seed, ChainId? chainId = null);
 
         Seed RandomSeed();
-        Bytes RandomBytes(int size);
-        Bytes StringToBytes(string input);
-        string BytesToString(Bytes input);
-        Bytes Split(Bytes binaryInput, int[] sizes);
-        string Concat(Bytes binaryInput);
+        byte[] RandomBytes(int size);
+        byte[] StringToBytes(string input);
+        string BytesToString(byte[] input);
 
-        Bytes SignBytesWithPrivateKey(Bytes bytes, PrivateKey privateKey);
-        Bytes SignBytes(Bytes bytes, Seed seed);
+        byte[] SignBytesWithPrivateKey(byte[] bytes, PrivateKey privateKey);
+        byte[] SignBytes(byte[] bytes, Seed seed);
 
-        bool VerifySignature(PublicKey publicKey, Bytes bytes, Bytes signature);
+        bool VerifySignature(PublicKey publicKey, byte[] bytes, byte[] signature);
         bool VerifyPublicKey(PublicKey publicKey);
         bool VerifyAddress(Address address, ChainId? chainId, PublicKey publicKey);
 
-        Bytes SharedKey(Bytes privateKeyFrom, Bytes publicKeyTo, string prefix);
-        string MessageDecrypt(Bytes sharedKey, Bytes encryptedMessage, string prefix);
-        Bytes MessageEncrypt(Bytes sharedKey, string message, string prefix);
+        byte[] SharedKey(byte[] privateKeyFrom, byte[] publicKeyTo, string prefix);
+        string MessageDecrypt(byte[] sharedKey, byte[] encryptedMessage, string prefix);
+        byte[] MessageEncrypt(byte[] sharedKey, string message, string prefix);
     }
 }
