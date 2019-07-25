@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace csharp_lib_crypto
+﻿namespace csharp_lib_crypto
 {
     using PublicKey = System.String;
     using PrivateKey = System.String;
     using Seed = System.String;
     using Address = System.String;
-    using ChainId = System.Int32;
 
     public interface IKeyPair
     {
@@ -46,8 +42,8 @@ namespace csharp_lib_crypto
         PublicKey PublicKey(Seed seed);
         PrivateKey PrivateKey(Seed seed);
 
-        Address AddressFromPublicKey(PublicKey publicKey, ChainId? chainId = null);
-        Address Address(Seed seed, ChainId? chainId = null);
+        Address AddressFromPublicKey(PublicKey publicKey, WavesChainId? chainId = null);
+        Address Address(Seed seed, WavesChainId? chainId = null);
 
         Seed RandomSeed();
         byte[] RandomBytes(int size);
@@ -59,7 +55,7 @@ namespace csharp_lib_crypto
 
         bool VerifySignature(PublicKey publicKey, byte[] bytes, byte[] signature);
         bool VerifyPublicKey(PublicKey publicKey);
-        bool VerifyAddress(Address address, ChainId? chainId, PublicKey publicKey);
+        bool VerifyAddress(Address address, WavesChainId? chainId, PublicKey publicKey);
 
         byte[] SharedKey(byte[] privateKeyFrom, byte[] publicKeyTo, string prefix);
         string MessageDecrypt(byte[] sharedKey, byte[] encryptedMessage, string prefix);
