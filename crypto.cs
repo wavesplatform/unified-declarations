@@ -1,53 +1,64 @@
-﻿using Bytes = System.Collections.Generic.IEnumerable<byte>;
-using PublicKey = System.String;
-using PrivateKey = System.String;
-using Seed = System.String;
-using Address = System.String;
-using ChainId = System.Int32;
-
-public interface IKeyPair
+﻿namespace csharp_lib_crypto
 {
-  PublicKey PublicKey { get; }
-  PrivateKey PrivateKey { get; }
-}
+    using PublicKey = System.String;
+    using PrivateKey = System.String;
+    using Seed = System.String;
+    using Address = System.String;
 
-static class WavesCryptoConstants
-{
-  public const int PUBLIC_KEY_LENGTH = 32;
-  public const int PRIVATE_KEY_LENGTH = 32;
-  public const int SIGNATURE_LENGTH = 64;
-}
+    public interface IKeyPair
+    {
+        PublicKey PublicKey { get; }
+        PrivateKey PrivateKey { get; }
+    }
 
-public enum WavesChainId
-{
-  MAIN_NET_CHAIN_ID = 87,
-  TEST_NET_CHAIN_ID = 84,
-}
+    static class WavesCryptoConstants
+    {
+        public const int PUBLIC_KEY_LENGTH = 32;
+        public const int PRIVATE_KEY_LENGTH = 32;
+        public const int SIGNATURE_LENGTH = 64;
+    }
 
-public interface IWavesCrypto
-{
-  Bytes Blake2b(Bytes input);
-  Bytes Keccak(Bytes input);
-  Bytes Sha256(Bytes input);
+    public enum WavesChainId
+    {
+        MAIN_NET_CHAIN_ID = 87,
+        TEST_NET_CHAIN_ID = 84,
+    }
 
-  string Base58encode(Bytes input);
-  Bytes Base58decode(string input);
-  string Base64encode(Bytes input);
-  Bytes Base64decode(string input);
+    public interface IWavesCrypto
+    {
 
-  IKeyPair KeyPair(Seed seed);
-  PublicKey PublicKey(Seed seed);
-  PrivateKey PrivateKey(Seed seed);
+        byte[] Blake2b(byte[] input);
+        byte[] Keccak(byte[] input);
+        byte[] Sha256(byte[] input);
 
-  Address AddressFromPublicKey(PublicKey publicKey, ChainId? chainId = null);
-  Address Address(Seed seed, ChainId? chainId = null);
+        string Base58Encode(byte[] input);
+        byte[] Base58Decode(string input);
+        string Base64Encode(byte[] input);
+        byte[] Base64Decode(string input);
+        string Base16Encode(byte[] input);
+        byte[] Base16Decode(string input);
 
-  Seed RandomSeed();
+        IKeyPair KeyPair(Seed seed);
+        PublicKey PublicKey(Seed seed);
+        PrivateKey PrivateKey(Seed seed);
 
-  Bytes SignBytesWithPrivateKey(Bytes bytes, PrivateKey privateKey);
-  Bytes SignBytes(Bytes bytes, Seed seed);
+        Address AddressFromPublicKey(PublicKey publicKey, WavesChainId? chainId = null);
+        Address Address(Seed seed, WavesChainId? chainId = null);
 
-  bool VerifySignature(PublicKey publicKey, Bytes bytes, Bytes signature);
-  bool VerifyPublicKey(PublicKey publicKey);
-  bool VerifyAddress(Address address, ChainId? chainId, PublicKey publicKey);
+        Seed RandomSeed();
+        byte[] RandomBytes(int size);
+        byte[] StringToBytes(string input);
+        string BytesToString(byte[] input);
+
+        byte[] SignBytesWithPrivateKey(byte[] bytes, PrivateKey privateKey);
+        byte[] SignBytes(byte[] bytes, Seed seed);
+
+        bool VerifySignature(PublicKey publicKey, byte[] bytes, byte[] signature);
+        bool VerifyPublicKey(PublicKey publicKey);
+        bool VerifyAddress(Address address, WavesChainId? chainId, PublicKey publicKey);
+
+        byte[] SharedKey(byte[] privateKeyFrom, byte[] publicKeyTo, string prefix);
+        string MessageDecrypt(byte[] sharedKey, byte[] encryptedMessage, string prefix);
+        byte[] MessageEncrypt(byte[] sharedKey, string message, string prefix);
+    }
 }
